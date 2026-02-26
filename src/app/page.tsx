@@ -18,6 +18,10 @@ export default async function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center blur-sm scale-105 opacity-50"
+          style={{ backgroundImage: "url('/landing.png')" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-pink-500/20" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 text-center">
