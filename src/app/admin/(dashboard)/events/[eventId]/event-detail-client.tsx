@@ -547,7 +547,7 @@ export default function EventDetailClient({
                                                 {formatTime(slot.start_time)} — {formatTime(slot.end_time)}
                                             </TableCell>
                                             <TableCell>
-                                                {slot.max_reservations} per day
+                                                {slot.max_reservations}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge

@@ -35,15 +35,20 @@ export default async function HomePage() {
             No more waiting in line. Scan the QR code, pick your timeslot, and get notified when it&apos;s your turn.
             Simple, fast, and hassle-free.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-4">
+          <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
             <a href="#events">
               <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/25 transition-all hover:shadow-indigo-500/40">
                 Browse Events
               </Button>
             </a>
-            <Link href="/admin/login">
+            <Link href="/about">
               <Button variant="outline" size="lg" className="border-indigo-500/30 hover:bg-indigo-500/10">
-                Admin Panel
+                About Us
+              </Button>
+            </Link>
+            <Link href="/admin/login">
+              <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground">
+                Admin Panel →
               </Button>
             </Link>
           </div>
@@ -141,10 +146,13 @@ export default async function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-border/50 py-8 mt-8">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
             QueueUp — Smart Queue Management System
           </p>
+          <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            About Us
+          </Link>
         </div>
       </footer>
     </div>
