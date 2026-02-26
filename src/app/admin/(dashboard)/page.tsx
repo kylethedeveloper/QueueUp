@@ -3,12 +3,14 @@ import { getEvents } from "@/app/actions/events";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
     let events: Awaited<ReturnType<typeof getEvents>> = [];
     try {
         events = await getEvents();
-    } catch {
-        // Supabase not configured
+    } catch (err) {
+        console.error("Failed to fetch events:", err);
     }
 
     const activeEvents = events.filter((e) => e.is_active).length;
@@ -88,8 +90,8 @@ export default async function AdminDashboard() {
                                     <div className="flex items-center justify-between">
                                         <span
                                             className={`text-xs font-medium px-2 py-1 rounded-full ${event.is_active
-                                                    ? "bg-emerald-500/10 text-emerald-400"
-                                                    : "bg-muted text-muted-foreground"
+                                                ? "bg-emerald-500/10 text-emerald-400"
+                                                : "bg-muted text-muted-foreground"
                                                 }`}
                                         >
                                             {event.is_active ? "Active" : "Inactive"}

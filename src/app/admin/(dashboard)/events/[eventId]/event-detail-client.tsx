@@ -8,7 +8,6 @@ import { Event, TimeslotWithCount, Reservation, DAY_NAMES, DAY_SHORT } from "@/l
 import { TIMEZONES } from "@/lib/timezones";
 import { updateEvent } from "@/app/actions/events";
 import {
-    createTimeslot,
     bulkCreateTimeslots,
     deleteTimeslot,
     bulkDeleteTimeslots,
@@ -92,12 +91,24 @@ export default function EventDetailClient({
         e.preventDefault();
         setIsSubmitting(true);
         const formData = new FormData(e.currentTarget);
-        formData.set("event_id", event.id);
-        const result = await createTimeslot(formData);
+        const dayOfWeek = parseInt(formData.get("day_of_week") as string, 10);
+        const startTime = formData.get("start_time") as string;
+        const endTime = formData.get("end_time") as string;
+        const interval = parseInt(formData.get("interval") as string, 10);
+        const maxReservations = parseInt(formData.get("max_reservations") as string, 10);
+
+        const result = await bulkCreateTimeslots(
+            event.id,
+            [dayOfWeek],
+            startTime,
+            endTime,
+            interval,
+            maxReservations
+        );
         if (result.error) {
             toast.error(result.error);
         } else {
-            toast.success("Timeslot added!");
+            toast.success(`${result.count} timeslot(s) created!`);
             setAddSlotOpen(false);
             router.refresh();
         }
@@ -339,9 +350,9 @@ export default function EventDetailClient({
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>Add Timeslot</DialogTitle>
+                                    <DialogTitle>Add Timeslots</DialogTitle>
                                     <DialogDescription>
-                                        Add a single weekly timeslot for this event.
+                                        Set a time range and interval to generate recurring slots.
                                     </DialogDescription>
                                 </DialogHeader>
                                 <form onSubmit={handleAddSlot} className="space-y-4 mt-2">
@@ -369,22 +380,37 @@ export default function EventDetailClient({
                                             <Input name="end_time" type="time" required />
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Max Reservations</Label>
-                                        <Input
-                                            name="max_reservations"
-                                            type="number"
-                                            min="1"
-                                            defaultValue="1"
-                                            required
-                                        />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Interval (minutes)</Label>
+                                            <Input
+                                                name="interval"
+                                                type="number"
+                                                min="1"
+                                                defaultValue="10"
+                                                required
+                                            />
+                                            <p className="text-xs text-muted-foreground">
+                                                e.g. 10 → 8:00-8:10, 8:10-8:20…
+                                            </p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Max per Slot</Label>
+                                            <Input
+                                                name="max_reservations"
+                                                type="number"
+                                                min="1"
+                                                defaultValue="1"
+                                                required
+                                            />
+                                        </div>
                                     </div>
                                     <Button
                                         type="submit"
                                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting ? "Adding..." : "Add Timeslot"}
+                                        {isSubmitting ? "Generating..." : "Generate Timeslots"}
                                     </Button>
                                 </form>
                             </DialogContent>
@@ -411,8 +437,8 @@ export default function EventDetailClient({
                                                     key={i}
                                                     onClick={() => toggleBulkDay(i)}
                                                     className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${bulkDays.has(i)
-                                                            ? "bg-indigo-600 text-white border-indigo-600"
-                                                            : "bg-background text-muted-foreground border-border hover:border-indigo-500/40"
+                                                        ? "bg-indigo-600 text-white border-indigo-600"
+                                                        : "bg-background text-muted-foreground border-border hover:border-indigo-500/40"
                                                         }`}
                                                 >
                                                     {day}

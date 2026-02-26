@@ -4,12 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   let events: Awaited<ReturnType<typeof getActiveEvents>> = [];
   try {
     events = await getActiveEvents();
-  } catch {
-    // Supabase not configured yet — show empty state
+  } catch (err) {
+    console.error("Failed to fetch active events:", err);
   }
 
   return (
