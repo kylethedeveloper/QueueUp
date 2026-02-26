@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -12,7 +13,7 @@ const team = [
     {
         name: "Emirhan Izgi",
         major: "BA in Business Administration and Management",
-        emoji: "📊",
+        photo: "/e.jpg",
         color: "from-amber-500/20 to-orange-500/20",
         borderColor: "hover:border-amber-500/40",
         badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
@@ -20,7 +21,7 @@ const team = [
     {
         name: "Gulce Gul",
         major: "MS in Artificial Intelligence Engineering",
-        emoji: "🤖",
+        photo: "/g.jpg",
         color: "from-violet-500/20 to-purple-500/20",
         borderColor: "hover:border-violet-500/40",
         badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
@@ -28,7 +29,7 @@ const team = [
     {
         name: "Melih Can Gunes",
         major: "MS in Big Data Analytics",
-        emoji: "📈",
+        photo: "/me.jpeg",
         color: "from-cyan-500/20 to-blue-500/20",
         borderColor: "hover:border-cyan-500/40",
         badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
@@ -36,7 +37,7 @@ const team = [
     {
         name: "Mert Yerlikaya",
         major: "MS in Cloud Computing Engineering",
-        emoji: "☁️",
+        photo: "/m.jpg",
         color: "from-emerald-500/20 to-teal-500/20",
         borderColor: "hover:border-emerald-500/40",
         badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
@@ -153,8 +154,14 @@ export default function AboutPage() {
                                 className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                             />
                             <CardContent className="relative pt-8 pb-8 text-center">
-                                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-muted/50 text-4xl group-hover:scale-110 transition-transform duration-300">
-                                    {member.emoji}
+                                <div className="mx-auto mb-5 h-24 w-24 rounded-full overflow-hidden ring-2 ring-border/50 group-hover:ring-indigo-500/40 group-hover:scale-110 transition-all duration-300">
+                                    <Image
+                                        src={member.photo}
+                                        alt={member.name}
+                                        width={96}
+                                        height={96}
+                                        className="h-full w-full object-cover"
+                                    />
                                 </div>
                                 <h3 className="text-lg font-semibold text-foreground mb-2">
                                     {member.name}
