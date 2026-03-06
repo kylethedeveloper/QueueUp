@@ -22,10 +22,7 @@ Reserve your spot in real-world queues. No more waiting in line — scan, book, 
 ### 1. Set up Supabase
 
 1. Create a free project at [supabase.com](https://supabase.com)
-2. Go to **SQL Editor** and run the migration file:
-   ```
-   supabase/migrations/001_initial_schema.sql
-   ```
+2. Go to **SQL Editor** and run the migration files under `supabase/migrations/` in order.
 3. Copy your project URL, anon key, and service role key
 
 ### 2. Configure Environment
