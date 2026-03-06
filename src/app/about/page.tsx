@@ -1,7 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getTeamMembers } from "@/app/actions/team";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
     title: "About Us — QueueUp",
@@ -9,42 +11,47 @@ export const metadata = {
         "Learn about the QueueUp team and our mission to eliminate waiting in lines through smart queue management.",
 };
 
-const team = [
+const CARD_THEMES = [
     {
-        name: "Emirhan Izgi",
-        major: "BA in Business Administration and Management",
-        photo: "/e.jpg",
         color: "from-amber-500/20 to-orange-500/20",
         borderColor: "hover:border-amber-500/40",
         badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     },
     {
-        name: "Gulce Gul",
-        major: "MS in Artificial Intelligence Engineering",
-        photo: "/g.jpg",
         color: "from-violet-500/20 to-purple-500/20",
         borderColor: "hover:border-violet-500/40",
         badgeColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
     },
     {
-        name: "Melih Can Gunes",
-        major: "MS in Big Data Analytics",
-        photo: "/me.jpeg",
         color: "from-cyan-500/20 to-blue-500/20",
         borderColor: "hover:border-cyan-500/40",
         badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
     },
     {
-        name: "Mert Yerlikaya",
-        major: "MS in Cloud Computing Engineering",
-        photo: "/m.jpg",
         color: "from-emerald-500/20 to-teal-500/20",
         borderColor: "hover:border-emerald-500/40",
         badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     },
+    {
+        color: "from-rose-500/20 to-pink-500/20",
+        borderColor: "hover:border-rose-500/40",
+        badgeColor: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+    },
+    {
+        color: "from-sky-500/20 to-indigo-500/20",
+        borderColor: "hover:border-sky-500/40",
+        badgeColor: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+    let teamMembers: Awaited<ReturnType<typeof getTeamMembers>> = [];
+    try {
+        teamMembers = await getTeamMembers();
+    } catch (err) {
+        console.error("Failed to fetch team members:", err);
+    }
+
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -143,38 +150,60 @@ export default function AboutPage() {
                         expertise.
                     </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {team.map((member) => (
-                        <Card
-                            key={member.name}
-                            className={`group relative overflow-hidden bg-card/50 border-border/50 transition-all ${member.borderColor} hover:shadow-lg`}
-                        >
-                            {/* Gradient background */}
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-br ${member.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                            />
-                            <CardContent className="relative pt-8 pb-8 text-center">
-                                <div className="mx-auto mb-5 h-24 w-24 rounded-full overflow-hidden ring-2 ring-border/50 group-hover:ring-indigo-500/40 group-hover:scale-110 transition-all duration-300">
-                                    <Image
-                                        src={member.photo}
-                                        alt={member.name}
-                                        width={96}
-                                        height={96}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-                                <h3 className="text-lg font-semibold text-foreground mb-2">
-                                    {member.name}
-                                </h3>
-                                <span
-                                    className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${member.badgeColor}`}
+
+                {teamMembers.length === 0 ? (
+                    <div className="text-center py-16 rounded-2xl border border-dashed border-border/50">
+                        <p className="text-lg text-muted-foreground">
+                            Team info coming soon.
+                        </p>
+                    </div>
+                ) : (
+                    <div className={`grid grid-cols-1 sm:grid-cols-2 ${teamMembers.length >= 3 ? "lg:grid-cols-3" : ""} ${teamMembers.length >= 4 ? "lg:grid-cols-4" : ""} gap-6`}>
+                        {teamMembers.map((member, index) => {
+                            const theme = CARD_THEMES[index % CARD_THEMES.length];
+                            const initials = member.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()
+                                .slice(0, 2);
+
+                            return (
+                                <Card
+                                    key={member.id}
+                                    className={`group relative overflow-hidden bg-card/50 border-border/50 transition-all ${theme.borderColor} hover:shadow-lg`}
                                 >
-                                    {member.major}
-                                </span>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                                    <div
+                                        className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                                    />
+                                    <CardContent className="relative pt-8 pb-8 text-center">
+                                        <div className="mx-auto mb-5 h-24 w-24 rounded-full overflow-hidden ring-2 ring-border/50 group-hover:ring-indigo-500/40 group-hover:scale-110 transition-all duration-300">
+                                            {member.photo_url ? (
+                                                <img
+                                                    src={member.photo_url}
+                                                    alt={member.name}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="h-full w-full bg-indigo-500/10 flex items-center justify-center text-2xl font-bold text-indigo-400">
+                                                    {initials}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <h3 className="text-lg font-semibold text-foreground mb-2">
+                                            {member.name}
+                                        </h3>
+                                        <span
+                                            className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${theme.badgeColor}`}
+                                        >
+                                            {member.position}
+                                        </span>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+                )}
             </section>
 
             {/* CTA */}

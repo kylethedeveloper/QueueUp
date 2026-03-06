@@ -30,6 +30,11 @@ export default function AdminLayout({
                                     Events
                                 </Button>
                             </Link>
+                            <Link href="/admin/settings">
+                                <Button variant="ghost" size="sm">
+                                    Settings
+                                </Button>
+                            </Link>
                         </nav>
                     </div>
                     <div className="flex items-center gap-3">

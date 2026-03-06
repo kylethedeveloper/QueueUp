@@ -6,10 +6,9 @@ ALTER TABLE timeslots
   DROP COLUMN IF EXISTS start_time,
   DROP COLUMN IF EXISTS end_time;
 
-ALTER TABLE timeslots
-  ADD COLUMN day_of_week INT NOT NULL DEFAULT 1,
-  ADD COLUMN start_time TIME NOT NULL DEFAULT '08:00',
-  ADD COLUMN end_time TIME NOT NULL DEFAULT '09:00';
+ALTER TABLE timeslots ADD COLUMN IF NOT EXISTS day_of_week INT NOT NULL DEFAULT 1;
+ALTER TABLE timeslots ADD COLUMN IF NOT EXISTS start_time TIME NOT NULL DEFAULT '08:00';
+ALTER TABLE timeslots ADD COLUMN IF NOT EXISTS end_time TIME NOT NULL DEFAULT '09:00';
 
 -- 2. Add reservation_date to reservations
 ALTER TABLE reservations ADD COLUMN IF NOT EXISTS reservation_date DATE;
